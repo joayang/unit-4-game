@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Basic jQuery Crystal Collector</title>
+  <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Hanalei+Fill" rel="stylesheet">
+  <style type="text/css">
+    body {
+      background-color: lightgrey;
+    }
+
+    .crystals {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+    }
+
+    .crystal {
+      border: 1px solid green;
+      height: 250px;
+      width: 250px;
+      border-radius: 4px;
+      box-shadow: 6px 6px 6px 0;
+      background-size: cover;
+    }
+
+    img {
+      width: 25px;
+    }
+
+    h1 {
+      text-align: center;
+      text-decoration: bold;
+      padding-top: 0;
+      border-bottom: none;
+      font-family: 'Hanalei Fill', cursive;
+      font-size: 3.2em;
+      text-transform: uppercase;
+    }
+
+    .instructions {
+      text-align: center;
+      padding-bottom: 30px;
+      font-family: 'Amatic SC', cursive;
+      font-size: 2.5em;
+    }
+
+    p {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 3em;
+      font-family: "Arial Black", Gadget, sans-serif;
+    }
+
+    .scoreboard {
+      margin-top: 30px;
+      border: 1px;
+      border-radius: 4px;
+      box-shadow: 3px 6px 4px 2px;
+      background-color: rgb(230, 232, 222);
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <h1>Crystal Collector Game</h1>
+  <div class="instructions">Each of the four crystals add a different value to your score. Add up your score to your target number to win!</div>
+  <div class="crystals"></div>
+
+  <!-- //testing image if it display
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNblzYfUOdC1JmZaWM_8FLVKlz_wYGSb03S-PQsUUycCXHRznV"> -->
+  <div class="scoreboard">
+    <p id="result"></p>
+    <p id="currScore"></p>
+    <p id="wins"></p>
+    <p id="losses"></p>
+  </div>
+
+  <script type="text/javascript">
+
+    var random_result;
+    var losses = 0;
+    var wins = 0;
+    var currScore = 0;
+    //fucntion resetGame 
+    var resetGame = function () {
+      var crystalImages = [
+        "https://www.fossilera.com/sp/124632/tangerine-hematite-quartz/quartz.jpg",
+        "http://static1.squarespace.com/static/5644b453e4b0552eb81185b6/5646246ce4b0a33eccdedd2d/56521e66e4b058e88fca5228/1449169817525/?format=1000w",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTzjHH7hGEhhkYe5MQ1h5zUsaUUpByQ4RqbDN19fyi81EIpRoW",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXmulf7BYGG0wkY4-aVIttlk30fL_XzRcuKOf32mfJ8iwfU6Sa"];
+      //Empty the crystal
+      $(".crystals").empty();
+      // generate a random result with the number between 19 to 120 
+      random_result = Math.floor(Math.random() * 101) + 19;
+      //add this to the DOM 
+      $("#currScore").html("Current score: " + currScore);
+      $("#result").html("Target number: " + random_result);
+      $("#wins").html("You win: " + wins);
+      $("#losses").html("You lost: " + losses);
+      // console.log("the random result: ", random_result);
+      //creaate avariable to generate 4 div for crystals and their classes
+      for (var i = 0; i < 4; i++) {
+        //each time creates a random number between 1 and 12
+        var random = Math.floor(Math.random() * 11) + 1;
+        // console.log(random);
+        // Created an empty HTML div. Note that there is no content
+        // <div id="empty-div"></div>
+        var crystal = $("<div>");
+        crystal.attr({
+          "class": 'crystal', "data-random": random
+        });
+        //add images
+        crystal.css({
+          "background-image": "url(" + crystalImages[i] + ")"
+        });
+        //show score on each crystal
+        // crystal.html(random);
+        $(".crystals").append(crystal);
+      }
+    }
+    resetGame();  //reset the game
+    $(document).on('click', ".crystal", function () {
+
+      //convert this into a number
+      var xtalNum = parseInt($(this).attr("data-random"));
+
+      //adding number of each crystal to the current score
+      currScore += xtalNum;
+
+      $("#currScore").text("Current score: " + currScore);
+      // console.log("current score: ", currScore);
+      if (currScore > random_result) {
+        losses++;
+        $("#losses").html("You lost: " + losses);
+        currScore = 0;
+        resetGame();
+        //   console.log("You lost!");
+      } else if (currScore === random_result) {
+        wins++;
+        $("#wins").html("You win: " + wins);
+        // console.log("You wins!")
+        currScore = 0;
+        resetGame();
+      }
+
+    });
+  </script>
+</body>
+
+</html>
